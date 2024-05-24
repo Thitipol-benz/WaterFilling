@@ -1,0 +1,24 @@
+.bg-mynav {
+    background-color: #ff6f00da; /* เปลี่ยนเป็นสีเขียว */
+    width: 100%; /* เพิ่มความกว้างเป็น 100% */
+    height: 80px; /* เพิ่มความยาวเป็น 80px */
+  }
+  
+  body {
+    font-size: 1.1rem;
+    background-color: #f6f8fa;
+
+  }
+  
+  td {
+      line-height: 5rem;
+  }
+  
+  .brand-text {
+    font-size: 35px; /* กำหนดขนาดข้อความใหญ่ขึ้นเป็น 24px (ตัวอย่าง) */
+  }
+  
+  .navbar-brand {
+    text-align: center;
+    width: 100%; /* เพื่อให้ข้อความอยู่ตรงกลางทั้งแนวนอน */
+  } 
