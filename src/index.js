@@ -13,11 +13,10 @@ const port = 3000
 // Connection string for MongoDB Atlas
 var uri = "mongodb+srv://thitipolbenz:Qd0zfvZQA35kdDDm@cluster0.yktswjy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// 1. Connect to MongoDB Atlas
+// Connect to MongoDB Atlas
 mongoose.connect(uri)
   .then(() => console.log("Database Connected Successfully"))
   .catch(err => console.error("Database Connection Error:", err));
-
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -39,9 +38,6 @@ app.get("/dashboard", (req, res) => {          //ไว้ post get
   res.render("dashboard");
 });
 
-
-
-
 // Login route
 app.post("/login", async (req, res) => {
   const client = new MongoClient(uri);
@@ -49,7 +45,7 @@ app.post("/login", async (req, res) => {
     await client.connect(); // Connect to MongoDB Atlas
 
     const user = await client.db('Login-tut').collection('users').findOne({ name: req.body.username });
-    console.log(user)
+    //console.log(user)
 
     if (!user) {
       return res.status(404).send("User not found");
@@ -60,8 +56,7 @@ app.post("/login", async (req, res) => {
 
     }
 
-
-    // return res.status(200).send("Login successful");
+// return res.status(200).send("Login successful");
     res.redirect("/dashboard");
 
   } catch (error) {
@@ -73,7 +68,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 /////////////////////////////// สิ้นสุด ///////////////////////////////
 
 app.get('/', (req, res) => {
@@ -83,8 +77,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
-
-// const uri = "mongodb+srv://thitipolbenz:Qd0zfvZQA35kdDDm@cluster0.yktswjy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 app.post('/users/create', async (req, res) => {     //ในฟังก์ชันนี้มี await อยู่
   const user = req.body;
@@ -207,11 +199,10 @@ app.get('/usersmongo', async (req, res) => {
 
 });
 
-
+// Update volume to mongoDB
 app.post('/volume/update', async (req, res) => {
   const user = req.body; // Get data from the request body
   const rfid = user.rfid; // Extract rfid from the user data
-
 
   const client = new MongoClient(uri);
   try {
@@ -219,7 +210,7 @@ app.post('/volume/update', async (req, res) => {
     await client.connect(); // Connect to the MongoDB database
 
     const user_data = await client.db('mydb').collection('users').findOne({ 'rfid': rfid });
-    console.log(user_data.volume)
+    //console.log(user_data.volume)
 
     var new_volume = user_data.volume - 2000
     if (new_volume < 0) {
@@ -246,6 +237,5 @@ app.post('/volume/update', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 module.exports = app;
