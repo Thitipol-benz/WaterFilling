@@ -38,60 +38,106 @@ function showUserCreateBox() {
   Swal.fire({
     title: 'Create user',
     html:
-    '<input id="id" class="swal2-input" placeholder="No.">' +
-    '<input id="rfid" class="swal2-input" placeholder="Tag RFID">' +
-    '<input id="avatar" class="swal2-input" placeholder="Photo (URL)">' +
-    '<input id="fname" class="swal2-input" placeholder="First Name">' +
-    '<input id="lname" class="swal2-input" placeholder="Last Name">' +
-    '<input id="patientId" class="swal2-input" placeholder="Patient ID">' +
-    
-    // เพิ่มข้อมูลเพิ่มเติม
-    '<input id="weight" class="swal2-input" placeholder="Weight">' + // น้ำหนัก
-    '<input id="height" class="swal2-input" placeholder="Height">' + // ส่วนสูง
-    '<input id="age" class="swal2-input" placeholder="Age">' + // อายุ
-    '<input id="roomNumber" class="swal2-input" placeholder="Room">' + // เลขห้องที่ผู้ป่วยพัก
-    '<input id="disease" class="swal2-input" placeholder="Disease">' + // โรคที่เป็น
-    '<input id="Physician" class="swal2-input" placeholder="Physician">' +
-    '<input id="volume" class="swal2-input" placeholder="volume (ml)">', // ชื่อแพทย์ที่รักษา,
+      '<input id="id" class="swal2-input" placeholder="No.">' +
+      '<input id="rfid" class="swal2-input" placeholder="Tag RFID">' +
+      '<input id="avatar" class="swal2-input" placeholder="Photo (URL)">' +
+      '<input id="fname" class="swal2-input" placeholder="First Name">' +
+      '<input id="lname" class="swal2-input" placeholder="Last Name">' +
+      '<input id="patientId" class="swal2-input" placeholder="Patient ID">' +
+      '<input id="weight" class="swal2-input" placeholder="Weight">' + // น้ำหนัก
+      '<input id="height" class="swal2-input" placeholder="Height">' + // ส่วนสูง
+      '<input id="age" class="swal2-input" placeholder="Age">' + // อายุ
+      '<input id="roomNumber" class="swal2-input" placeholder="Room">' + // เลขห้องที่ผู้ป่วยพัก
+      '<input id="disease" class="swal2-input" placeholder="Disease">' + // โรคที่เป็น
+      '<input id="Physician" class="swal2-input" placeholder="Physician">' +
+      '<input id="volume" class="swal2-input" placeholder="Volume (ml)">', // ปริมาณน้ำ
     focusConfirm: false,
     preConfirm: () => {
+      const id = document.getElementById("id").value;
+      const rfid = document.getElementById("rfid").value;
+      const avatar = document.getElementById("avatar").value;
+      const fname = document.getElementById("fname").value;
+      const lname = document.getElementById("lname").value;
+      const patientId = document.getElementById("patientId").value;
+      const weight = document.getElementById("weight").value;
+      const height = document.getElementById("height").value;
+      const age = document.getElementById("age").value;
+      const roomNumber = document.getElementById("roomNumber").value;
+      const disease = document.getElementById("disease").value;
+      const Physician = document.getElementById("Physician").value;
+      const volume = document.getElementById('volume').value;
+
+      // ตรวจสอบว่าข้อมูลครบทุกช่อง
+      if (!id || !rfid || !avatar || !fname || !lname || !patientId || !weight || !height || !age || !roomNumber || !disease || !Physician || !volume) {
+        Swal.showValidationMessage("คุณจำเป็นต้องกรอกข้อมูลให้ครบทุกช่อง");
+        return false;
+      }
+
+      // ตรวจสอบว่าข้อมูลที่ต้องเป็นตัวเลขเป็นตัวเลข
+      if (isNaN(id) || isNaN(patientId) || isNaN(weight) || isNaN(height) || isNaN(age) || isNaN(roomNumber) || isNaN(volume)) {
+        Swal.showValidationMessage("No., Patient ID, Weight, Height, Age, Room และ Volume ต้องเป็นตัวเลข");
+        return false;
+      }
+
+      // ตรวจสอบว่าข้อมูลชื่อเป็นตัวอักษร
+      if (!/^[a-zA-Z]+$/.test(fname)) {
+        Swal.showValidationMessage("First Name ต้องเป็นตัวอักษรเท่านั้น");
+        return false;
+      }
+
+      if (!/^[a-zA-Z]+$/.test(lname)) {
+        Swal.showValidationMessage("Last Name ต้องเป็นตัวอักษรเท่านั้น");
+        return false;
+      }
+
+      if (!/^[a-zA-Z.]+$/.test(Physician)) {
+        Swal.showValidationMessage("Physician ต้องเป็นตัวอักษรเท่านั้น");
+        return false;
+      }
+
+      if (!/^[a-zA-Z]+$/.test(disease)) {
+        Swal.showValidationMessage("disease ต้องเป็นตัวอักษรเท่านั้น"); 
+        return false;
+      }
+
       userCreate();
     }
-  })
+  });
 }
 
 function userCreate() {
-const id = document.getElementById("id").value;
-const rfid = document.getElementById("rfid").value;
-const avatar = document.getElementById("avatar").value;
-const fname = document.getElementById("fname").value;
-const lname = document.getElementById("lname").value;
-const patientId = document.getElementById("patientId").value;
+  const id = document.getElementById("id").value;
+  const rfid = document.getElementById("rfid").value;
+  const avatar = document.getElementById("avatar").value;
+  const fname = document.getElementById("fname").value;
+  const lname = document.getElementById("lname").value;
+  const patientId = document.getElementById("patientId").value;
+  const weight = document.getElementById("weight").value;
+  const height = document.getElementById("height").value;
+  const age = document.getElementById("age").value;
+  const roomNumber = document.getElementById("roomNumber").value;
+  const disease = document.getElementById("disease").value;
+  const Physician = document.getElementById("Physician").value;
+  const volume = document.getElementById('volume').value;
 
-// เพิ่มข้อมูลเพิ่มเติม
-const weight = document.getElementById("weight").value;
-const height = document.getElementById("height").value;
-const age = document.getElementById("age").value;
-const roomNumber = document.getElementById("roomNumber").value;
-const disease = document.getElementById("disease").value;
-const Physician = document.getElementById("Physician").value;
-const volume = document.getElementById('volume').value;
-
-const xhttp = new XMLHttpRequest();
-xhttp.open("POST", "http://localhost:3000/users/create");
-xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-xhttp.send(JSON.stringify({ 
-  "id": id,"rfid": rfid, "avatar": avatar, "fname": fname, "lname": lname, "patientId": patientId, 
-  
-  // เพิ่มข้อมูลเพิ่มเติมในอ็อบเจ็กต์ JSON
-  "weight": weight,
-  "height": height,
-  "age": age,
-  "roomNumber": roomNumber,
-  "disease": disease,
-  "Physician": Physician ,
-  "volume": volume
-}));
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "http://localhost:3000/users/create");
+  xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhttp.send(JSON.stringify({
+    "id": id,
+    "rfid": rfid,
+    "avatar": avatar,
+    "fname": fname,
+    "lname": lname,
+    "patientId": patientId,
+    "weight": weight,
+    "height": height,
+    "age": age,
+    "roomNumber": roomNumber,
+    "disease": disease,
+    "Physician": Physician,
+    "volume": volume
+  }));
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -129,6 +175,8 @@ function userDelete(id) {
     }
   });
 }
+
+/////////////////////////////////////////////////////////////
 
 function showUserEditBox(id) {
   console.log(id);
@@ -182,6 +230,26 @@ function userEdit() {
   const Physician = document.getElementById("Physician").value;
   const volume = document.getElementById("volume").value;
   
+  // เพิ่มเงื่อนไขตรวจสอบว่าข้อมูลที่ป้อนเป็นตัวอักษรหรือตัวเลข
+  if (!/^\d+$/.test(patientId) || !/^\d+$/.test(weight) || !/^\d+$/.test(height) || !/^\d+$/.test(age) || !/^\d+$/.test(volume)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'กรุณากรอกข้อมูลเป็นตัวเลข'    //'Please make sure Patient ID, Weight, Height, Age, and Volume are numeric.'
+    });
+    return; // หยุดการทำงานของฟังก์ชันหากข้อมูลไม่ถูกต้อง
+  }
+
+  // เพิ่มเงื่อนไขตรวจสอบว่า First Name, Last Name, Disease, และ Physician เป็นตัวอักษร
+  if (!/^[A-Za-z]+$/.test(fname) || !/^[A-Za-z]+$/.test(lname) || !/^[A-Za-z]+$/.test(disease) || !/^[A-Za-z.]+$/.test(Physician)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'กรุณากรอกข้อมูลเป็นอักษร'
+    });
+    return; // หยุดการทำงานของฟังก์ชันหากข้อมูลไม่ถูกต้อง
+  }
+
   const xhttp = new XMLHttpRequest();
   xhttp.open("PUT", "http://localhost:3000/users/update");
   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
