@@ -228,15 +228,20 @@ app.post('/volume/update', async (req, res) => {
     const user_data = await client.db('mydb').collection('users').findOne({ 'rfid': rfid });
     const currentDate = new Date();
 
-     // Calculate new volume
-    
-     var new_volume = user_data.volume 
+    // Calculate new volume
+    var new_volume = user_data.volume - 2000; // Subtract 2000 from the current volume
+
+    // Set the new volume to 0 if it's less than 0
+    if (new_volume < 0) {
+      new_volume = 0;
+    }
 
     // Update the user document
     await client.db('mydb').collection('users').updateOne({ 'rfid': rfid }, {
       "$set": {
-        volume: new_volume,
-        Timeupdate: formatDateTime(currentDate) // Add the timestamp to the document
+
+        'Nvolume': new_volume, // Update the Nvolume field with the new value
+        'V-D': formatDateTime(currentDate) // Update the V-D field with the timestamp
       }
     });
 
@@ -245,12 +250,12 @@ app.post('/volume/update', async (req, res) => {
     // Send response indicating successful update
     res.status(200).send({
       "status": "ok",
-      "message": "Volume for user with ID = " + rfid + " is updated",
+      "message": "Volume and V-D fields for user with ID = " + rfid + " are updated",
       "user": user,
       "Timeupdate": formatDateTime(currentDate) // Include the timestamp in the response
     });
   } catch (error) {
-    console.error("Error updating user volume:", error);
+    console.error("Error updating user volume and V-D field:", error);
     res.status(500).send("Internal Server Error");
   }
 });
