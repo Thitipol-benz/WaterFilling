@@ -11,7 +11,7 @@ function loadTable() {
         trHTML += '<tr>'; 
         trHTML += '<td>'+object['id']+'</td>';
         trHTML += '<td>'+object['rfid']+'</td>';
-        trHTML += '<td><img width="50px" src="'+object['avatar']+'" class="avatar"></td>';
+        // trHTML += '<td><img width="50px" src="'+object['avatar']+'" class="avatar"></td>';
         trHTML += '<td>'+object['fname']+'</td>';
         trHTML += '<td>'+object['lname']+'</td>';
         trHTML += '<td>'+object['patientId']+'</td>';
@@ -40,7 +40,7 @@ function showUserCreateBox() {
     html:
       '<input id="id" class="swal2-input" placeholder="No.">' +
       '<input id="rfid" class="swal2-input" placeholder="Tag RFID">' +
-      '<input id="avatar" class="swal2-input" placeholder="Photo (URL)">' +
+      // '<input id="avatar" class="swal2-input" placeholder="Photo (URL)">' +
       '<input id="fname" class="swal2-input" placeholder="First Name">' +
       '<input id="lname" class="swal2-input" placeholder="Last Name">' +
       '<input id="patientId" class="swal2-input" placeholder="Patient ID">' +
@@ -55,7 +55,7 @@ function showUserCreateBox() {
     preConfirm: () => {
       const id = document.getElementById("id").value;
       const rfid = document.getElementById("rfid").value;
-      const avatar = document.getElementById("avatar").value;
+      // const avatar = document.getElementById("avatar").value;
       const fname = document.getElementById("fname").value;
       const lname = document.getElementById("lname").value;
       const patientId = document.getElementById("patientId").value;
@@ -68,7 +68,7 @@ function showUserCreateBox() {
       const volume = document.getElementById('volume').value;
 
       // ตรวจสอบว่าข้อมูลครบทุกช่อง
-      if (!id || !rfid || !avatar || !fname || !lname || !patientId || !weight || !height || !age || !roomNumber || !disease || !Physician || !volume) {
+      if (!id || !rfid || !fname || !lname || !patientId || !weight || !height || !age || !roomNumber || !disease || !Physician || !volume) {
         Swal.showValidationMessage("คุณจำเป็นต้องกรอกข้อมูลให้ครบทุกช่อง");
         return false;
       }
@@ -95,7 +95,7 @@ function showUserCreateBox() {
         return false;
       }
 
-      if (!/^[a-zA-Z]+$/.test(disease)) {
+      if (!/^[A-Za-z.0-9]+$/.test(disease)) {
         Swal.showValidationMessage("disease ต้องเป็นตัวอักษรเท่านั้น"); 
         return false;
       }
@@ -108,7 +108,7 @@ function showUserCreateBox() {
 function userCreate() {
   const id = document.getElementById("id").value;
   const rfid = document.getElementById("rfid").value;
-  const avatar = document.getElementById("avatar").value;
+  //const avatar = document.getElementById("avatar").value;
   const fname = document.getElementById("fname").value;
   const lname = document.getElementById("lname").value;
   const patientId = document.getElementById("patientId").value;
@@ -126,7 +126,7 @@ function userCreate() {
   xhttp.send(JSON.stringify({
     "id": id,
     "rfid": rfid,
-    "avatar": avatar,
+    //"avatar": avatar,
     "fname": fname,
     "lname": lname,
     "patientId": patientId,
@@ -193,7 +193,7 @@ function showUserEditBox(id) {
         html:
         '<input id="id" class="swal2-input" placeholder="ID" value="' + user['id'] + '" disabled>' +
         '<input id="rfid" class="swal2-input" placeholder="rfid" value="' + user['rfid'] + '">' +
-        '<input id="avatar" class="swal2-input" placeholder="Photo (URL)" value="' + user['avatar'] + '">' +
+        //'<input id="avatar" class="swal2-input" placeholder="Photo (URL)" value="' + user['avatar'] + '">' +
         '<input id="fname" class="swal2-input" placeholder="First Name" value="' + user['fname'] + '">' +
         '<input id="lname" class="swal2-input" placeholder="Last Name" value="' + user['lname'] + '">' +
         '<input id="patientId" class="swal2-input" placeholder="Patient ID" value="' + user['patientId'] + '">'+
@@ -218,7 +218,7 @@ function showUserEditBox(id) {
 function userEdit() {
   const id = document.getElementById("id").value;
   const rfid = document.getElementById("rfid").value;
-  const avatar = document.getElementById("avatar").value;
+  //const avatar = document.getElementById("avatar").value;
   const fname = document.getElementById("fname").value;
   const lname = document.getElementById("lname").value;
   const patientId = document.getElementById("patientId").value;
@@ -241,7 +241,7 @@ function userEdit() {
   }
 
   // เพิ่มเงื่อนไขตรวจสอบว่า First Name, Last Name, Disease, และ Physician เป็นตัวอักษร
-  if (!/^[A-Za-z]+$/.test(fname) || !/^[A-Za-z]+$/.test(lname) || !/^[A-Za-z]+$/.test(disease) || !/^[A-Za-z.]+$/.test(Physician)) {
+  if (!/^[A-Za-z]+$/.test(fname) || !/^[A-Za-z]+$/.test(lname) || !/^[A-Za-z.0-9]+$/.test(disease) || !/^[A-Za-z.]+$/.test(Physician)) {
     Swal.fire({
       icon: 'error',
       title: 'Invalid Input',
@@ -256,7 +256,7 @@ function userEdit() {
   xhttp.send(JSON.stringify({ 
     "id": id, 
     "rfid": rfid,
-    "avatar": avatar,
+    //"avatar": avatar,
     "fname": fname, 
     "lname": lname, 
     "patientId": patientId, 

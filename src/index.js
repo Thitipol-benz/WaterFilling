@@ -13,12 +13,28 @@ const port = 3000
 // Connection string for MongoDB Atlas
 var uri = "mongodb+srv://thitipolbenz:Qd0zfvZQA35kdDDm@cluster0.yktswjy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// 1. Connect to MongoDB Atlas
+// Connect to MongoDB Atlas
 mongoose.connect(uri)
   .then(() => console.log("Database Connected Successfully"))
   .catch(err => console.error("Database Connection Error:", err));
 
-
+// Function to format the date and time
+  function formatDateTime(date) {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false, // ใช้รูปแบบ 24 ชั่วโมง
+      timeZone: 'Asia/Bangkok' // Set the time zone to Thailand
+    };
+    const formattedDate = date.toLocaleString('en-US', options);
+    const optionsWith12Hour = { ...options, hour12: true }; // สร้าง options ใหม่โดยเปลี่ยน hour12 เป็น true
+    const formattedDateWith12Hour = date.toLocaleString('en-US', optionsWith12Hour);
+    return formattedDateWith12Hour;
+  }
+   
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -39,9 +55,6 @@ app.get("/dashboard", (req, res) => {          //ไว้ post get
   res.render("dashboard");
 });
 
-
-
-
 // Login route
 app.post("/login", async (req, res) => {
   const client = new MongoClient(uri);
@@ -49,7 +62,7 @@ app.post("/login", async (req, res) => {
     await client.connect(); // Connect to MongoDB Atlas
 
     const user = await client.db('Login-tut').collection('users').findOne({ name: req.body.username });
-    console.log(user)
+    //console.log(user)
 
     if (!user) {
       return res.status(404).send("User not found");
@@ -60,8 +73,7 @@ app.post("/login", async (req, res) => {
 
     }
 
-
-    // return res.status(200).send("Login successful");
+// return res.status(200).send("Login successful");
     res.redirect("/dashboard");
 
   } catch (error) {
@@ -73,7 +85,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 /////////////////////////////// สิ้นสุด ///////////////////////////////
 
 app.get('/', (req, res) => {
@@ -84,44 +95,32 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-// const uri = "mongodb+srv://thitipolbenz:Qd0zfvZQA35kdDDm@cluster0.yktswjy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-//////////////////////////////////////////////////////////////////
-
-app.post('/users/create', async (req, res) => {
+app.post('/users/create', async (req, res) => {     //ในฟังก์ชันนี้มี await อยู่
   const user = req.body;
   const client = new MongoClient(uri);
-  try {
-    await client.connect();
-
-    // Add timestamp to the user data
-    user.created_at = new Date(); // Adding the current date and time
-
-    await client.db('mydb').collection('users').insertOne(user);
-    await client.close();
-
-    res.status(200).send({
-      "status": "ok",
-      "message": "User created successfully",
-      "user": user
-    });
-  } 
-  catch (error) {
-    console.error("Error creating user:", error);
-
-    // ตรวจสอบประเภทของข้อผิดพลาด
-    if (error instanceof Error) {
-        // ข้อผิดพลาดที่เกิดจากการเชื่อมต่อฐานข้อมูล
-        res.status(500).send("Internal Server Error");
-    } else {
-        // ข้อผิดพลาดอื่น ๆ ที่อาจเกิดขึ้น
-        res.status(400).send("Bad Request");
-    }
-}
-
-});
-
-///////////////////////////////////////////////////
+  await client.connect();                          // รอแล้วค่อยรัน
+  await client.db('mydb').collection('users').insertOne({     //สร้างโฟเดอร์กับ collection
+    id: parseInt(user.id),
+    rfid: user.rfid,
+    avatar: user.avatar,
+    fname: user.fname,    //first name
+    lname: user.lname,     // last name
+    patientId: user.patientId,
+    weight: user.weight,    // น้ำหนัก
+    height: user.height,    // ส่วนสูง
+    age: user.age,    // อายุ
+    roomNumber: user.roomNumber,    // เลขห้อง
+    disease: user.disease,    // โรค
+    Physician: user.Physician,
+    volume: parseInt(user.volume)
+  });
+  await client.close();         //หยุดการเชื่อมต่อกับมองโก
+  res.status(200).send({
+    "status": "ok",                //key value
+    "message": "User with ID = " + user.id + " is created",    //user มีการสร้างขึ้นมา
+    "user": user       //ส่งข้อมูล user กลับไป
+  });
+})
 
 app.get('/users', async (req, res) => {
   const id = parseInt(req.params.id);
@@ -217,29 +216,27 @@ app.get('/usersmongo', async (req, res) => {
 
 });
 
-
+// Update volume to mongoDB
 app.post('/volume/update', async (req, res) => {
   const user = req.body; // Get data from the request body
   const rfid = user.rfid; // Extract rfid from the user data
 
-
   const client = new MongoClient(uri);
   try {
-
     await client.connect(); // Connect to the MongoDB database
 
     const user_data = await client.db('mydb').collection('users').findOne({ 'rfid': rfid });
-    console.log(user_data.volume)
+    const currentDate = new Date();
 
-    var new_volume = user_data.volume - 2000
-    if (new_volume < 0) {
-      new_volume = 0;
-    }
+     // Calculate new volume
+    
+     var new_volume = user_data.volume 
 
     // Update the user document
     await client.db('mydb').collection('users').updateOne({ 'rfid': rfid }, {
       "$set": {
-        volume: new_volume
+        volume: new_volume,
+        Timeupdate: formatDateTime(currentDate) // Add the timestamp to the document
       }
     });
 
@@ -249,13 +246,13 @@ app.post('/volume/update', async (req, res) => {
     res.status(200).send({
       "status": "ok",
       "message": "Volume for user with ID = " + rfid + " is updated",
-      "user": user
+      "user": user,
+      "Timeupdate": formatDateTime(currentDate) // Include the timestamp in the response
     });
   } catch (error) {
     console.error("Error updating user volume:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 module.exports = app;
