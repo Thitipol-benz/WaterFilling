@@ -217,47 +217,75 @@ app.get('/usersmongo', async (req, res) => {
 });
 
 // Update volume to mongoDB
+// Function to format the date
+function formatDateTime(date) {
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
 app.post('/volume/update', async (req, res) => {
   const user = req.body; // Get data from the request body
   const rfid = user.rfid; // Extract rfid from the user data
 
   const client = new MongoClient(uri);
+
   try {
     await client.connect(); // Connect to the MongoDB database
 
     const user_data = await client.db('mydb').collection('users').findOne({ 'rfid': rfid });
     const currentDate = new Date();
 
+    if (!user_data) {
+      return res.status(404).send({ "status": "error", "message": "User not found" });
+    }
+
     // Calculate new volume
-    var new_volume = user_data.volume - 2000; // Subtract 2000 from the current volume
+    let new_volume = user_data.Nvolume - 2000; // Subtract 2000 from the current volume
 
     // Set the new volume to 0 if it's less than 0
     if (new_volume < 0) {
       new_volume = 0;
     }
 
+    // Create a new volume update entry
+    const volumeUpdate = {
+      newVolume: new_volume,
+      timestamp: formatDateTime(currentDate) // Use formatted date
+    };
+
     // Update the user document
-    await client.db('mydb').collection('users').updateOne({ 'rfid': rfid }, {
-      "$set": {
-
-        'Nvolume': new_volume, // Update the Nvolume field with the new value
-        'V-D': formatDateTime(currentDate) // Update the V-D field with the timestamp
+    await client.db('mydb').collection('users').updateOne(
+      { 'rfid': rfid },
+      {
+        "$set": {
+          'Nvolume': new_volume, // Update the Nvolume field with the new value
+        },
+        "$push": {
+          'volumeUpdates': volumeUpdate // Add the new volume update entry to the volumeUpdates array
+        }
       }
-    });
+    );
 
-    await client.close(); // Close the database connection
+    // Close the database connection
+    await client.close();
 
     // Send response indicating successful update
     res.status(200).send({
       "status": "ok",
-      "message": "Volume and V-D fields for user with ID = " + rfid + " are updated",
+      "message": "Volume updated for user with RFID = " + rfid,
       "user": user,
       "Timeupdate": formatDateTime(currentDate) // Include the timestamp in the response
     });
   } catch (error) {
-    console.error("Error updating user volume and V-D field:", error);
+    console.error("Error updating user volume:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 module.exports = app;
