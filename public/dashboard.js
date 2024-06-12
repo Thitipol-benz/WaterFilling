@@ -23,7 +23,7 @@ function loadTable() {
         trHTML += '<td>'+object['Physician']+'</td>'; // ชื่อแพทย์ที่รักษา
         trHTML += '<td>'+object['volume']+'</td>'; // ปริมาณน้ำต่อวัน
         trHTML += '<td>'+object['Nvolume']+'</td>';
-        trHTML += '<td>'+JSON.stringify (object['volumeUpdates'])+'</td>';
+        // trHTML += '<td>'+JSON.stringify (object['volumeUpdates'])+'</td>';
         trHTML += '<td><button type="button" class="btn btn-outline-secondary" onclick="showUserEditBox('+object['id']+')">Edit</button>';
         trHTML += '<button type="button" class="btn btn-outline-danger" onclick="userDelete('+object['id']+')">Del</button></td>';
         trHTML += "</tr>";

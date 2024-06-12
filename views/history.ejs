@@ -9,12 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
     <title>Water Filling Machine</title>
-
-    <link href="/dashboard.css" rel="stylesheet">
   </head>
   <body>
     
-    <nav class="navbar navbar-dark bg-mynav">
+    <nav class="navbar navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"><span class="brand-text">WATER FILLING MACHINE</span></a>
       </div>
@@ -22,12 +20,10 @@
 
     <div class="container">
       <div class="d-flex bd-highlight mb-3">
-        <div class="me-auto p-2 bd-highlight"><h2>Patient information</h2></div>
+        <div class="me-auto p-2 bd-highlight"><h2>Patient water volume information</h2></div>
         <div class="p-2 bd-highlight">
-          <button type="button" class="btn btn-secondary" onclick="showUserCreateBox()">Create</button>
+          <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
           <button type="button" class="btn btn-secondary" onclick="redirectToPage()">Log Out</button>
-          <!-- ปุ่มใหม่ -->
-          <button type="button" class="btn btn-primary" onclick="redirectToNewPage()">History</button>
         </div>
       </div>
 
@@ -35,25 +31,13 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">No.</th>
               <th scope="col">Tag RFID</th>
-              <!-- <th scope="col">Photo</th> -->
               <th scope="col">First Name</th>
               <th scope="col">Last Name</th>
-              <th scope="col">Patient ID</th>
-              <th scope="col">Weight</th>
-              <th scope="col">Height</th>
-              <th scope="col">Age</th>
-              <th scope="col">Room </th>
-              <th scope="col">Disease</th>
-              <th scope="col">Physician</th>
-              <th scope="col">Volume(ml) </th>
-              <th scope="col">Nvolume</th>
-              <!-- <th scope="col">History</th> -->
-              <th scope="col">Action</th>
+              <th scope="col">Volume Updates</th>
             </tr>
           </thead>
-          <tbody id="mytable">
+          <tbody id="historytable">
             <tr>
               <th scope="row" colspan="5">Loading...</th>
             </tr>
@@ -62,16 +46,16 @@
       </div>
     </div>
     
-    <script src="dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="history.js"></script>
     <script>
       function redirectToPage() {
         window.location.href = "http://localhost:3000/";
       }
 
-      function redirectToNewPage() {
-        window.location.href = "http://localhost:3000/history";  // เปลี่ยน URL ไปยังหน้าที่คุณต้องการ
+      function goBack() {
+        window.location.href = "http://localhost:3000/dashboard";
       }
     </script>
   </body>

@@ -47,11 +47,15 @@ app.use(express.urlencoded({ extended: false }));
 //use EJS as the view engine
 app.set("view engine", "ejs");
 
-app.get("/", (req, res) => {          //ไว้ post get
+app.get("/", (req, res) => {          
   res.render("login");
 });
 
-app.get("/dashboard", (req, res) => {          //ไว้ post get
+app.get("/history", (req, res) => {         
+  res.render("history");
+});
+
+app.get("/dashboard", (req, res) => {          
   res.render("dashboard");
 });
 
@@ -87,9 +91,7 @@ app.post("/login", async (req, res) => {
 
 /////////////////////////////// สิ้นสุด ///////////////////////////////
 
-app.get('/', (req, res) => {
-  res.send('Test server')    //ผลลัพธ์
-})
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
@@ -229,6 +231,20 @@ function formatDateTime(date) {
   };
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
+app.get("/history", async (req, res) => {
+  try {
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    const collection = client.db('mydb').collection('history');
+    const data = await collection.find({}).toArray();
+    await client.close();
+    res.send(data); 
+  } catch (error) {
+    console.error('Error fetching data from MongoDB', error);
+    res.status(500).send('Error fetching data from MongoDB');
+  }
+});
 
 app.post('/volume/update', async (req, res) => {
   const user = req.body; // Get data from the request body
