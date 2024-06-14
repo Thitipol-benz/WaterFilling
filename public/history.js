@@ -15,11 +15,21 @@ function loadTable() {
       var trHTML = '';
       data.forEach((object, index) => {
         trHTML += '<tr>';
-
+        // trHTML += '<td>' + (index + 1) + '</td>';
         trHTML += '<td>' + object['rfid'] + '</td>';
         trHTML += '<td>' + object['fname'] + '</td>';
         trHTML += '<td>' + object['lname'] + '</td>';
-        trHTML += '<td>'+JSON.stringify (object['volumeUpdates'])+'</td>';
+         
+        // Extract newVolume and timestamp from volumeUpdates
+        var volumeUpdates = object['volumeUpdates'];
+        var volumeInfo = '';
+        if (volumeUpdates) {
+          volumeUpdates.forEach(update => {
+            volumeInfo += 'Volume: ' + update.newVolume + ' Date-Time: ' + update.timestamp + '<br>';
+          });
+        }
+
+        trHTML += '<td>' + volumeInfo + '</td>';
         trHTML += '</tr>';
       });
       console.log("Generated HTML: ", trHTML);

@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')   //เรียก api ข้ามโดเมนได้
 const path = require("path");
-// const collection = require("./config");
 const mongoose = require('mongoose');
 
 const bcrypt = require('bcrypt');
@@ -259,24 +258,22 @@ app.post('/volume/update', async (req, res) => {
     const currentDate = new Date();
 
     if (!user_data) {
+      console.log('User not found');
       return res.status(404).send({ "status": "error", "message": "User not found" });
     }
 
-    // Calculate new volume
-    let new_volume = user_data.Nvolume - 2000; // Subtract 2000 from the current volume
+    let currentVolume = user_data.Nvolume || user_data.volume; // Use user_data.volume if Nvolume is not present
+    let new_volume = currentVolume - 2000; // Subtract 2000 from the current volume
 
-    // Set the new volume to 0 if it's less than 0
     if (new_volume < 0) {
       new_volume = 0;
     }
 
-    // Create a new volume update entry
     const volumeUpdate = {
       newVolume: new_volume,
       timestamp: formatDateTime(currentDate) // Use formatted date
     };
 
-    // Update the user document
     await client.db('mydb').collection('users').updateOne(
       { 'rfid': rfid },
       {
@@ -288,6 +285,8 @@ app.post('/volume/update', async (req, res) => {
         }
       }
     );
+
+    console.log('Volume updated successfully');
 
     // Close the database connection
     await client.close();
