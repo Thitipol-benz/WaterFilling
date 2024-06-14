@@ -26,12 +26,13 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, .2);
   color: #000000;
   border-radius: 85px;
-  padding: 60px 40px;
+  padding: 80px 40px;
  }
-
- .wrapper h1 {
-  font-size: 50px;
+/* Member login */
+ .wrapper h1 {      
+  font-size: 46px;
   text-align: center;
+  font-family: "Arial", sans-serif; 
  }
 
 .wrapper .input-box {
